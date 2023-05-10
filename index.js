@@ -1,7 +1,7 @@
 const canvas = document.querySelector(".canvas");
 const ctx = canvas.getContext("2d", { alpha: false });
 
-const CELL_SIZE = 8;
+const CELL_SIZE = 12;
 const COLORS = ["#11111b", "#313244", "#f5c2e7"];
 const COLORS_LENGTH = COLORS.length;
 
