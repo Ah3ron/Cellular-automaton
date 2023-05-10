@@ -8,9 +8,10 @@ const COLORS_LENGTH = COLORS.length;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const scaleX = window.innerWidth / canvas.width;
-const scaleY = window.innerHeight / canvas.height;
-const scaleToCover = Math.max(scaleX, scaleY);
+const scaleToCover = Math.max(
+  window.innerWidth / canvas.width,
+  window.innerHeight / canvas.height
+);
 
 canvas.style.transformOrigin = "0 0"; //scale from top left
 canvas.style.transform = "scale(" + scaleToCover + ")";
@@ -19,15 +20,14 @@ const GRID_WIDTH = Math.ceil(window.innerWidth / CELL_SIZE);
 const GRID_HEIGHT = Math.ceil(window.innerHeight / CELL_SIZE);
 
 function createGrid(rows, cols) {
-  const grid = new Array(rows);
+  const grid = [];
   for (let i = 0; i < rows; i++) {
-    grid[i] = new Array(cols);
-    for (let j = 0; j < cols; j++) {
-      grid[i][j] = 0;
-    }
+    grid[i] = Array(cols).fill(0);
   }
+
   return grid;
 }
+
 let grid = createGrid(GRID_HEIGHT, GRID_WIDTH);
 
 function randomizeGrid() {
@@ -37,6 +37,7 @@ function randomizeGrid() {
     }
   }
 }
+
 randomizeGrid();
 
 function drawGrid() {
@@ -48,11 +49,12 @@ function drawGrid() {
   }
 }
 
-function colorFromNeighbors(x, y) {
-  const currentColor = grid[y][x];
-  const colorCounts = new Array(COLORS_LENGTH).fill(0);
 
-  let newColor;
+function colorFromNeighbors(x, y, grid) {
+  const currentColor = grid[y][x];
+  const colorCounts = Array(COLORS_LENGTH).fill(0);
+
+  let newColor = currentColor;
 
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
@@ -78,8 +80,6 @@ function colorFromNeighbors(x, y) {
 
   if (colorCounts[(currentColor + 1) % COLORS_LENGTH] >= 3) {
     newColor = (currentColor + 1) % COLORS_LENGTH;
-  } else {
-    newColor = currentColor;
   }
 
   return newColor;
@@ -90,12 +90,12 @@ function updateGrid() {
 
   for (let y = 0; y < grid.length; y++) {
     for (let x = 0; x < grid[y].length; x++) {
-      newGrid[y][x] = colorFromNeighbors(x, y);
+      newGrid[y][x] = colorFromNeighbors(x, y, grid);
     }
   }
 
   grid = newGrid;
-  drawGrid(grid);
+  drawGrid();
 }
 
 function animate() {
